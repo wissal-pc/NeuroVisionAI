@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultats de l'analyse IRM</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .section { margin-bottom: 30px; }
+        h2 { color: #2c3e50; }
+        img { max-width: 100%; height: auto; border: 1px solid #ccc; margin-top: 10px; }
+        .coords, .info { margin-left: 15px; }
+        .feedback-stars span { font-size: 1.5em; color: gold; }
+        em { color: #555; }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h2>Informations Patient</h2>
+        <p><strong>Nom et Prénom :</strong> {{ patient_lastname }} {{ patient_firstname }}</p>
+        <p><strong>ID du patient :</strong> {{ patient_id }}</p>
+        <p><strong>Date de naissance :</strong> {{ patient_birthdate }} (Age : {{ patient_age }} ans)</p>
+        <p><strong>Antécédents :</strong> {{ antecedents if antecedents else "Aucun" }}</p>
+        <p><strong>Traitements :</strong> {{ traitements if traitements else "Aucun" }}</p>
+        <p><strong>Médecin :</strong> {{ medecin }}</p>
+        <p><strong>Date de l'IRM :</strong> {{ irm_date }}</p>
+    </div>
+    <div class="section">
+        <h2>Résultat de l’analyse</h2>
+        <p><strong>Volume tumoral :</strong> {{ "%.2f" % volume }} cm³</p>
+        <p><strong>Dimensions :</strong> 42 mm (L) × 38 mm (H) × 30 mm (P)</p>
+        <p><strong>Score Dice :</strong> {% if dice is not none %}{{ "%.2f" % dice }}{% else %}Non calculé (masque réel non fourni){% endif %}</p>
+        <p><strong>Centroïde :</strong> {% if centroid %} X: {{ centroid[0] }} mm, Y: {{ centroid[1] }} mm, Z: {{ centroid[2] }} mm {% else %} Non détecté{% endif %}</p>
+    </div>
+
+    <div class="section">
+        <h2>Image originale (IRM brute)</h2>
+        <img src="{{ url_for('static', filename=original_image_file) }}" alt="Image IRM originale">
+    </div>
+
+    <div class="section">
+        <h2>Masque de segmentation</h2>
+        <img src="{{ url_for('static', filename=segmented_mask_file) }}" alt="Masque segmenté de la tumeur">
+    </div>
+    <div class="section">
+    <h2>Feedback Médical Complet</h2>
+    <form action="/feedback" method="post">
+        <input type="hidden" name="patient_id" value="{{ patient_id }}">
+        <div>
+            <label for="seg_ok">Segmentation correcte ?</label>
+            <select name="seg_ok" id="seg_ok" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Oui">Oui</option>
+                <option value="Non">Non</option>
+                <option value="Partiellement">Partiellement</option>
+            </select>
+        </div>
+        <div>
+            <label for="confidence">Confiance dans l'analyse (1-5) :</label>
+            <input type="number" name="confidence" min="1" max="5" required>
+        </div>
+
+        <div>
+            <label for="commentaire">Commentaires détaillés :</label>
+            <textarea name="commentaire" rows="4" required></textarea>
+        </div>
+
+        <div>
+            <label for="next_exam">Prochain examen recommandé :</label>
+            <input type="text" name="next_exam" placeholder="Ex: dans 3 mois">
+        </div>
+        <div>
+            <label for="recommendations">Recommandations :</label>
+            <textarea name="recommendations" rows="3"></textarea>
+        </div>
+
+        <button type="submit">Soumettre le feedback complet</button>
+    </form>
+    </div>
+    
+    <div class="section">
+        <a href="/upload">Nouvelle analyse</a> | 
+        <a href="/logout">Déconnexion</a>
+    </div>
+<script>
+  document.querySelector("form[action='/feedback']").addEventListener("submit", function() {
+    this.querySelector("button[type='submit']").disabled = true;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Suivi Patient</title>
+</head>
+<body>
+    <h2>Suivi Patient</h2>
+    <div class="section">
+        <h3>Informations patient</h3>
+        <p><strong>Nom et Prénom :</strong> {{ patient_lastname }} {{ patient_firstname }}</p>
+        <p><strong>ID du patient :</strong> {{ patient_id }}</p>
+    </div>
+    
+    <div class="section">
+        <h3>Plan de suivi</h3>
+        <p><strong>Prochain examen :</strong> {{ next_exam }}</p>
+        <p><strong>Recommandations :</strong> {{ recommendations }}</p>
+    </div>
+    
+    <div class="section">
+        <form action="/generate_report" method="post">
+            <input type="hidden" name="patient_lastname" value="{{ patient_lastname }}">
+            <input type="hidden" name="patient_firstname" value="{{ patient_firstname }}">
+            <input type="hidden" name="patient_id" value="{{ patient_id }}">
+            <input type="hidden" name="patient_age" value="{{ patient_age }}">
+            <input type="hidden" name="volume" value="{{ volume }}">
+            <input type="hidden" name="centroid" value="{{ centroid }}">
+            <input type="hidden" name="dice" value="{{ dice if dice is not none else 'Non calculé' }}">
+            <input type="hidden" name="next_exam" value="{{ next_exam }}">
+            <input type="hidden" name="recommendations" value="{{ recommendations }}">
+            <input type="hidden" name="antecedents" value="{{ antecedents }}">
+            <input type="hidden" name="traitements" value="{{ traitements }}">
+            <input type="hidden" name="irm_date" value="{{ irm_date }}">
+            <button type="submit" class="btn">📄 Télécharger le rapport PDF</button>
+        </form>
+        </form>
+    </div>
+
+    <div>
+        <a href="/upload">Nouvelle analyse</a> | 
+        <a href="/logout">Déconnexion</a>
+    </div>
+</body>
+</html>

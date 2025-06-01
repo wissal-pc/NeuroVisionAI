@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Importer IRM</title>
+</head>
+<body>
+  <h2>Importer une image IRM </h2>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <table>
+      <!-- Infos Patient -->
+      <tr>
+        <td><label for="patient_lastname">Nom du patient :</label></td>
+        <td><input type="text" name="patient_lastname" id="patient_lastname" placeholder="Nom du patient" required></td>
+      </tr>
+      <tr>
+          <td><label for="patient_firstname">Prénom du patient :</label></td>
+          <td><input type="text" name="patient_firstname" id="patient_firstname" placeholder="Prénom" required></td>
+      </tr>
+      <tr>
+        <td><label for="patient_id">ID du patient :</label></td>
+        <td><input type="text" name="patient_id" id="patient_id" placeholder="ID du patient" required></td>
+      </tr>
+      <tr>
+        <td><label for="patient_birthdate">Date de naissance :</label></td>
+        <td><input type="date" name="patient_birthdate" id="patient_birthdate" required></td>
+      </tr>
+      <tr hidden>
+        <td><label for="patient_age">Âge :</label></td>
+        <td><input type="number" id="patient_age" placeholder="Calculé côté serveur" disabled></td>
+      </tr>
+      
+      <!-- Antécédents -->
+      <tr>
+        <td><label for="antecedents">Antécédents médicaux :</label></td>
+        <td><textarea name="antecedents" id="antecedents" rows="3" placeholder="Ex : migraines fréquentes, etc."></textarea></td>
+      </tr>
+      
+      <!-- Traitements -->
+      <tr>
+        <td><label for="traitements">Traitements en cours :</label></td>
+        <td><textarea name="traitements" id="traitements" rows="3" placeholder="Ex : Aucun"></textarea></td>
+      </tr>
+      
+      <!-- Date IRM -->
+      <tr>
+        <td><label for="irm_date">Date de l'IRM :</label></td>
+        <td><input type="date" name="irm_date" id="irm_date" required></td>
+      </tr>
+      
+      <!-- Fichiers -->
+      <tr>
+        <td><label for="file-input">Fichier IRM :</label></td>
+        <td><input type="file" name="file" id="file-input" required></td>
+      </tr>
+      <tr>
+        <td><label for="ground_truth">Masque réel (optionnel) :</label></td>
+        <td><input type="file" name="ground_truth" id="ground_truth"></td>
+      </tr>
+      
+      <!-- Boutons -->
+      <tr>
+        <td></td>
+        <td>
+          <input type="submit" value="Analyser">
+          <input type="reset" value="Réinitialiser">
+        </td>
+      </tr>
+    </table>
+  </form>
+   
+  <p><a href="/logout">Déconnexion</a></p>
+  <script>
+    const birthdateInput = document.getElementById("patient_birthdate");
+    const ageInput = document.getElementById("patient_age");
+
+    birthdateInput.addEventListener("change", function () {
+      const birthDate = new Date(this.value);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      ageInput.value = age;
+    });
+    document.querySelector("form").addEventListener("submit", function () {
+  document.getElementById("upload-message").style.display = "block";
+});
+</script>
+<div id="upload-message" style="display:none; color: green; margin-top: 10px;">
+  ✅ Fichier envoyé. Analyse en cours...
+</div>
+</body>
+</html>

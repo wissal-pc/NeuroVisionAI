@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inscription</title>
+</head>
+<body>
+        <div class="login-form">
+            <h2>Inscription</h2>
+            <form method="post">
+                <table>
+                    <tr>
+                        <td><label>Nom</label></td>
+                        <td><input type="text" name="nom" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Prénom</label></td>
+                        <td><input type="text" name="prenom" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Email</label></td>
+                        <td><input type="email" name="email" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Nom d'utilisateur</label></td>
+                        <td><input type="text" name="username" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Mot de passe</label></td>
+                        <td><input type="password" name="password" required></td>
+                    </tr>
+                </table>
+                <div style="margin-top: 15px;">
+                    <button type="submit">S'inscrire</button>
+                </div>
+        </form>   
+        <p style=" margin-top:15px;">
+            <a href="/login">Déjà inscrit ? Se connecter</a>
+        </p>
+        <div id="success-message" style="display: none; color: green; margin-bottom: 15px;">
+                Inscription réussie ! 
+        </div>
+    </div>
+    <script>
+    // Fonction exécutée si un paramètre "registered=1" est dans l'URL
+    window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('registered') === '1') {
+            const msgDiv = document.getElementById('success-message');
+            msgDiv.style.display = 'block';
+            
+            // Rediriger après 3 secondes
+            setTimeout(function () {
+                window.location.href = '/login';
+            }, 3000);
+        }
+    }
+    </script>
+</body>
+</html>
